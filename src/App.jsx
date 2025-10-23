@@ -12,7 +12,6 @@ export default function FaskerAI() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const messagesEndRef = useRef(null);
 
-  // Initialize API key from environment variables
   useEffect(() => {
     const envKey = import.meta.env.VITE_GEMINI_API_KEY;
     if (envKey) {
@@ -92,13 +91,12 @@ export default function FaskerAI() {
     setSidebarOpen(false);
   };
 
-  // Custom components for ReactMarkdown to match our styling
   const MarkdownComponents = {
     p: ({ children }) => <p className="mb-3 last:mb-0 leading-relaxed">{children}</p>,
-    h1: ({ children }) => <h1 className="text-2xl font-bold mt-4 mb-3 text-white">{children}</h1>,
-    h2: ({ children }) => <h2 className="text-xl font-bold mt-4 mb-3 text-white">{children}</h2>,
-    h3: ({ children }) => <h3 className="text-lg font-bold mt-4 mb-3 text-white">{children}</h3>,
-    h4: ({ children }) => <h4 className="text-base font-bold mt-4 mb-3 text-white">{children}</h4>,
+    h1: ({ children }) => <h1 className="text-xl sm:text-2xl font-bold mt-4 mb-3 text-white">{children}</h1>,
+    h2: ({ children }) => <h2 className="text-lg sm:text-xl font-bold mt-4 mb-3 text-white">{children}</h2>,
+    h3: ({ children }) => <h3 className="text-base sm:text-lg font-bold mt-4 mb-3 text-white">{children}</h3>,
+    h4: ({ children }) => <h4 className="text-sm sm:text-base font-bold mt-4 mb-3 text-white">{children}</h4>,
     ul: ({ children }) => <ul className="mb-3 pl-4 list-disc list-outside space-y-1">{children}</ul>,
     ol: ({ children }) => <ol className="mb-3 pl-4 list-decimal list-outside space-y-1">{children}</ol>,
     li: ({ children }) => <li className="pl-1">{children}</li>,
@@ -109,11 +107,11 @@ export default function FaskerAI() {
     ),
     code: ({ inline, children }) => {
       if (inline) {
-        return <code className="bg-slate-600 px-1 py-0.5 rounded text-sm font-mono">{children}</code>;
+        return <code className="bg-slate-600 px-1 py-0.5 rounded text-xs sm:text-sm font-mono">{children}</code>;
       }
       return (
-        <pre className="bg-slate-600 p-3 rounded-lg my-3 overflow-x-auto">
-          <code className="text-sm font-mono block">{children}</code>
+        <pre className="bg-slate-600 p-3 rounded-lg my-3 overflow-x-auto text-xs sm:text-sm">
+          <code className="font-mono block">{children}</code>
         </pre>
       );
     },
@@ -132,16 +130,16 @@ export default function FaskerAI() {
   };
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-slate-900 to-slate-800">
+    <div className="flex h-screen bg-gradient-to-br from-slate-900 to-slate-800 flex-col sm:flex-row">
       {/* Sidebar */}
-      <div className={`${sidebarOpen ? 'w-64' : 'w-0'} transition-all duration-300 bg-slate-950 border-r border-slate-700 flex flex-col overflow-hidden`}>
-        <div className="p-6">
-          <h1 className="text-2xl font-bold text-white">FaskerAI</h1>
+      <div className={`${sidebarOpen ? 'w-64' : 'w-0'} transition-all duration-300 bg-slate-950 border-b sm:border-b-0 sm:border-r border-slate-700 flex flex-col overflow-hidden`}>
+        <div className="p-4 sm:p-6">
+          <h1 className="text-xl sm:text-2xl font-bold text-white">FaskerAI</h1>
         </div>
         <div className="flex-1 px-4 py-6">
           <button
             onClick={clearChat}
-            className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition-all"
+            className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition-all text-sm sm:text-base"
           >
             New Chat
           </button>
@@ -152,31 +150,31 @@ export default function FaskerAI() {
       </div>
 
       {/* Main Chat Area */}
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col w-full">
         {/* Header */}
-        <div className="bg-slate-800 border-b border-slate-700 px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-4">
+        <div className="bg-slate-800 border-b border-slate-700 px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
+          <div className="flex items-center gap-2 sm:gap-4 min-w-0">
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="text-slate-300 hover:text-white lg:hidden"
+              className="text-slate-300 hover:text-white sm:hidden flex-shrink-0"
             >
-              {sidebarOpen ? <X size={24} /> : <Menu size={24} />}
+              {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
-            <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">
+            <h2 className="text-lg sm:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300 truncate">
               FaskerAI
             </h2>
           </div>
         </div>
 
         {/* Messages Container */}
-        <div className="flex-1 overflow-y-auto px-6 py-8 space-y-4">
+        <div className="flex-1 overflow-y-auto px-3 sm:px-6 py-4 sm:py-8 space-y-3 sm:space-y-4">
           {messages.map((msg) => (
             <div
               key={msg.id}
               className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
             >
               <div
-                className={`max-w-xs lg:max-w-md xl:max-w-2xl px-4 py-3 rounded-lg ${
+                className={`max-w-xs sm:max-w-sm md:max-w-2xl px-3 sm:px-4 py-2 sm:py-3 rounded-lg text-sm sm:text-base ${
                   msg.sender === 'user'
                     ? 'bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-br-none'
                     : 'bg-slate-700 text-slate-100 rounded-bl-none'
@@ -196,8 +194,8 @@ export default function FaskerAI() {
           ))}
           {loading && (
             <div className="flex justify-start">
-              <div className="bg-slate-700 text-slate-100 px-4 py-3 rounded-lg rounded-bl-none flex items-center gap-2">
-                <Loader size={20} className="animate-spin" />
+              <div className="bg-slate-700 text-slate-100 px-3 sm:px-4 py-2 sm:py-3 rounded-lg rounded-bl-none flex items-center gap-2 text-sm sm:text-base">
+                <Loader size={18} className="animate-spin flex-shrink-0" />
                 <span>Thinking...</span>
               </div>
             </div>
@@ -206,27 +204,27 @@ export default function FaskerAI() {
         </div>
 
         {/* Input Area */}
-        <div className="bg-slate-800 border-t border-slate-700 px-6 py-4">
-          <div className="flex gap-3">
+        <div className="bg-slate-800 border-t border-slate-700 px-3 sm:px-6 py-3 sm:py-4">
+          <div className="flex gap-2 sm:gap-3">
             <input
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
               placeholder="Type your message..."
-              className="flex-1 bg-slate-700 text-white placeholder-slate-400 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+              className="flex-1 bg-slate-700 text-white placeholder-slate-400 rounded-lg px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
               disabled={loading}
             />
             <button
               onClick={handleSendMessage}
               disabled={loading || !input.trim()}
-              className="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3 px-4 rounded-lg transition-all flex items-center gap-2"
+              className="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-2 sm:py-3 px-3 sm:px-4 rounded-lg transition-all flex items-center justify-center flex-shrink-0"
             >
-              <Send size={20} />
+              <Send size={18} className="sm:block" />
             </button>
           </div>
           <p className="text-slate-400 text-xs mt-2 text-center">
-            You can use markdown in your messages. The bot will respond with formatted text.
+            FaskerAI Can Make Mistakes. Check important info!
           </p>
         </div>
       </div>
